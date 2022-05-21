@@ -26,11 +26,15 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
+    
+    @app.route('/')
+    def intro():
+        return redirect(url_for('auth.login'))
 
     # a simple page that says hello
     @app.route('/hello')
     def hello():
-        return 'Hello, Worldly beings!'
+        return 'Hello, World!'
         
     db.init_app(app)
     app.register_blueprint(auth.bp)
