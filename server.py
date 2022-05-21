@@ -1,6 +1,9 @@
 import os
+import db
+import auth
 
 from flask import Flask
+from waitress import serve
 
 
 def create_app(test_config=None):
@@ -27,13 +30,14 @@ def create_app(test_config=None):
     # a simple page that says hello
     @app.route('/hello')
     def hello():
-        return 'Hello, World!'
+        return 'Hello, Worldly beings!'
         
-    from . import db
     db.init_app(app)
-    
-    from . import auth
     app.register_blueprint(auth.bp)
 
     return app
 
+if __name__ == '__main__':
+    PORT = os.environ.get('PORT', 8080)
+    app=create_app()
+    serve(app, host='0.0.0.0', port=PORT)
