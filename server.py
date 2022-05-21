@@ -1,5 +1,6 @@
 import os
 import auth
+import sleep
 
 from flask import (
     Flask, redirect, render_template, url_for
@@ -26,17 +27,11 @@ def create_app(test_config=None):
         os.makedirs(app.instance_path)
     except OSError:
         pass
-    
-    @app.route('/')
-    def intro():
-        return redirect(url_for('auth.login'))
 
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return render_template('hello.html')
         
     app.register_blueprint(auth.bp)
+    app.register_blueprint(sleep.bp)
+    app.add_url_rule('/', endpoint='hello')
 
     return app
 

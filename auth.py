@@ -4,7 +4,6 @@ import os
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
-from werkzeug.security import check_password_hash, generate_password_hash
 
 
 
@@ -22,8 +21,10 @@ def login():
 
         if username is None:
             error = 'Incorrect username.'
+        elif not username == expected_username:
+            error = 'Access denied.'
         elif not password == expected_password:
-            error = 'Incorrect password.'
+            error = 'Access denied.'
 
         if error is None:
             session.clear()
