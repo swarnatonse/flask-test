@@ -4,6 +4,7 @@ import os
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
+from aws import get_login_info
 
 
 
@@ -16,8 +17,9 @@ def login():
         password = request.form['password']
         error = None
         
-        expected_username = os.environ.get('USERNAME')
-        expected_password = os.environ.get('TROUT')
+        login_info = get_login_info()
+        expected_username = login_info['username']
+        expected_password = login_info['password']
 
         if username is None:
             error = 'Incorrect username.'

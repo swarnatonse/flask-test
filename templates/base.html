@@ -2,7 +2,7 @@
 <title>{% block title %}{% endblock %} - Flaskr</title>
 <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 <nav>
-  <h1>Flaskr</h1>
+  <h1>SleepyHead</h1>
   <ul>
     {% if g.user %}
       <li><span>{{ g.user }}</span>
@@ -19,3 +19,13 @@
   {% endfor %}
   {% block content %}{% endblock %}
 </section>
+
+<script>
+  Date.prototype.toDateInputValue = (function() {
+      var local = new Date(this);
+      local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+      return local.toJSON().slice(0,10);
+  });
+
+  document.getElementById('updatedate').value = new Date().toDateInputValue();
+</script>
