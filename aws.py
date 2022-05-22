@@ -9,26 +9,36 @@ import string
 dynamodb = boto3.client('dynamodb')
 secretsmanager = boto3.client('secretsmanager')
 
+form_input_map = {
+    'updatedate': 'updatedate',
+    'phonedown': 'PhoneDownTime',
+    'activities': 'Activities',
+    'bedtime': 'Bedtime',
+    'lightsout': 'LightsOutTime',
+    'howmanywakeup': 'WakeUpCount',
+    'howlongawake': 'WakeUpDuration',
+    'wakeuptime': 'FinalWakeUpTime',
+    'arisetime': 'AriseTime',
+    'sleepnotes': 'SleepNotes'
+}
+
 def write_to_table(sleepdata):
-    key = sleepdata['updatedate']
-    if not key:
-        key = generate_ddb_key()
+    itemkey = sleepdata['updatedate']
+    if not itemkey:
+        itemkey = generate_ddb_key()
+        
+    item = {}
+    item['DayId'] = { 'S': itemkey }
+    for key, value in form_input_map.items():
+        item[value] = { 'S': sleepdata[key] }
+    item['LastUpdateTime'] = {'S': datetime.datetime.now().isoformat()}
+    
+    print(item)
         
     dynamodb.put_item(
         TableName='SleepData', 
-        Item={
-            'DayId':{'S':key},
-            'updatedate':{'S':sleepdata['updatedate']},
-            'PhoneDownTime':{'S':sleepdata['phonedown']}, 
-            'Activities':{'S':sleepdata['activities']},
-            'Bedtime':{'S':sleepdata['bedtime']},
-            'LightsOutTime':{'S':sleepdata['lightsout']},
-            'WakeUpCount':{'S':sleepdata['howmanywakeup']},
-            'WakeUpDuration':{'S':sleepdata['howlongawake']},
-            'FinalWakeUpTime':{'S':sleepdata['wakeuptime']},
-            'AriseTime':{'S':sleepdata['arisetime']},
-            'LastUpdateTime':{'S': datetime.datetime.now().isoformat()}
-        })
+        Item=item
+    )
         
 def get_item_from_table(date):
     return dynamodb.get_item(
