@@ -31,7 +31,7 @@ def create_app(test_config=None):
         
     app.register_blueprint(auth.bp)
     app.register_blueprint(sleep.bp)
-    app.add_url_rule('/', endpoint='hello')
+    app.add_url_rule('/', endpoint='sleep.index')
 
     return app
 

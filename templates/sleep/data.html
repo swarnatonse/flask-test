@@ -1,0 +1,142 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Enter sleep data{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+  <label for="updatedate">Enter date for data:</label>
+  <input name="updatedate" id="updatedate" type="date"/>
+  
+  <h2>Pre-bedtime data</h2>
+    <label for="phonedown">When did I put my phone down?</label>
+    <input name="phonedown" id="phonedown" type="time">
+
+    <label for="activities">What activities did I do during wind-down time?</label>
+    <input name="activities" id="activities" type="textarea">
+  
+  <h2>Sleep data</h2>
+    <label for="bedtime">What time did I go to bed?</label>
+    <input name="bedtime" id="bedtime" type="time">
+    
+    <label for="lightsout">What time did I turn the lights out to go to sleep?</label>
+    <input name="lightsout" id="lightsout" type="time">
+    
+    <label for="howlongtillasleep">About how long did I take to fall asleep? (in minutes)</label>
+    <input name="howlongtillasleep" id="howlongtillasleep" type="number"/>
+    
+    <label for="howmanywakeup">How many times did I wake up?</label>
+    <input name="howmanywakeup" id="howmanywakeup" type="number"/>
+    
+    <label for="howlongawake">How long was I awake? (in minutes)</label>
+    <input name="howlongawake" id="howlongawake" type="number"/>
+    
+    <label for="wakeuptime">What time did I wake up?</label>
+    <input name="wakeuptime" id="wakeuptime" type="time">
+    
+    <label for="arisetime">What time did I get out of bed?</label>
+    <input name="arisetime" id="arisetime" type="time">
+    
+    <label for="sleepnotes">Any notes?</label>
+    <input name="sleepnotes" id="sleepnotes" type="textarea">
+  
+  <h2>Fitness tracker data</h2>
+    <label>How long did I sleep according to fitbit?</label>
+    <div style="display:flex; ">
+      <div style="padding:20px">
+      <label for="fitbithrs">hours</label>
+      <input name="fitbithrs" id="fitbithrs" type="number" />
+      </div>
+      <div style="padding:20px">
+      <label for="fitbitmins">mins</label>
+      <input name="fitbitmins" id="fitbitmins" type="number" />
+      </div>
+    </div>
+    
+    <label for="fitbitscore">What was my sleep score according to fitbit?</label>
+    <input name="fitbitscore" id="fitbitscore" type="number"/>
+    
+  <h2>Post-wakeup daytime stuff</h2>
+    <label for="exercisetime">How long did I exercise? (in minutes)</label>
+    <input name="exercisetime" id="exercisetime" type="number"/>
+    
+    <label for="exercises">What exercises did I do?</label>
+    <input name="exercises" id="exercises" type="text"/>
+    
+    <label for="stress">What was my stress level?</label>
+    <select name="stress" id="stress">
+      <option value="1">1 - Not stressed</option>
+      <option value="2">2 - A little stressed</option>
+      <option value="3">3 - Somewhat stressed</option>
+      <option value="4">4 - Pretty stressed</option>
+      <option value="5">5 - Very stressed</option>
+    </select>
+    
+    <label for="mood">What was my mood?</label>
+    <select name="mood" id="mood">
+      <option value="1">1 - Sad</option>
+      <option value="2">2 - Meh</option>
+      <option value="3">3 - Just okay</option>
+      <option value="4" selected="selected">4 - Good</option>
+      <option value="5">5 - Great</option>
+    </select>
+    
+    <h3>Energy level throughout the day</h3>
+    
+    <div>
+      <div>
+      <label for="energy1">Pre-work-hours energy (7:30 am to 10 am)</label>
+      <select name="energy1" id="energy1">
+        <option value="1">1 - Horrible energy</option>
+        <option value="2">2 - Bad energy</option>
+        <option value="3" selected="selected">3 - Average energy</option>
+        <option value="4">4 - Good energy</option>
+        <option value="5">5 - Great energy</option>
+      </select>
+      </div>
+      <div>
+      <label for="energy2">Pre-lunch work-hours energy (10 am to 2 pm)</label>
+      <select name="energy2" id="energy2">
+        <option value="1">1 - Horrible energy</option>
+        <option value="2">2 - Bad energy</option>
+        <option value="3" selected="selected">3 - Average energy</option>
+        <option value="4">4 - Good energy</option>
+        <option value="5">5 - Great energy</option>
+      </select>
+      </div>
+      <div>
+      <label for="energy3">Post-lunch work-hours energy (2 pm to 6 pm)</label>
+      <select name="energy3" id="energy3">
+        <option value="1">1 - Horrible energy</option>
+        <option value="2">2 - Bad energy</option>
+        <option value="3" selected="selected">3 - Average energy</option>
+        <option value="4">4 - Good energy</option>
+        <option value="5">5 - Great energy</option>
+      </select>
+      </div>
+      <div>
+      <label for="energy4">Post-work-hours energy (6 pm to 9 pm)</label>
+      <select name="energy4" id="energy4">
+        <option value="1">1 - Horrible energy</option>
+        <option value="2">2 - Bad energy</option>
+        <option value="3" selected="selected">3 - Average energy</option>
+        <option value="4">4 - Good energy</option>
+        <option value="5">5 - Great energy</option>
+      </select>
+      </div>
+    </div>
+    
+    <input type="submit" value="Submit">
+</form>
+
+<script>
+  Date.prototype.toDateInputValue = (function() {
+      var local = new Date(this);
+      local.setMinutes(this.getMinutes() - this.getTimezoneOffset());
+      return local.toJSON().slice(0,10);
+  });
+
+  document.getElementById('updatedate').value = new Date().toDateInputValue();
+</script>
+{% endblock %}

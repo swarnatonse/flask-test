@@ -19,7 +19,18 @@ form_input_map = {
     'howlongawake': 'WakeUpDuration',
     'wakeuptime': 'FinalWakeUpTime',
     'arisetime': 'AriseTime',
-    'sleepnotes': 'SleepNotes'
+    'sleepnotes': 'SleepNotes',
+    'fitbithrs': 'FitbitHours',
+    'fitbitmins': 'FitbitMins',
+    'fitbitscore': 'FitbitScore',
+    'exercisetime': 'ExerciseTime',
+    'exercises': 'Exercises',
+    'stress': 'Stress',
+    'mood': 'Mood',
+    'energy1': 'MorningEnergy',
+    'energy2': 'ForenoonEnergy',
+    'energy3': 'AfternoonEnergy',
+    'energy4': 'EveningEnergy'
 }
 
 def write_to_table(sleepdata):
@@ -30,10 +41,10 @@ def write_to_table(sleepdata):
     item = {}
     item['DayId'] = { 'S': itemkey }
     for key, value in form_input_map.items():
-        item[value] = { 'S': sleepdata[key] }
+        attr = sleepdata.get(key)
+        item[value] = { 'S': attr if attr else '' }
+            
     item['LastUpdateTime'] = {'S': datetime.datetime.now().isoformat()}
-    
-    print(item)
         
     dynamodb.put_item(
         TableName='SleepData', 

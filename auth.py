@@ -31,7 +31,7 @@ def login():
         if error is None:
             session.clear()
             session['user_id'] = expected_username
-            return redirect(url_for('hello'))
+            return redirect(url_for('sleep.index'))
 
         flash(error)
 

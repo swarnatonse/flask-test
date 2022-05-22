@@ -7,18 +7,23 @@ from aws import (
     form_input_map, get_item_from_table, write_to_table
 )
 
-bp = Blueprint('sleep', __name__)
+bp = Blueprint('sleep', __name__, url_prefix='/sleep')
 
-@bp.route('/', methods=('GET', 'POST'))
+@bp.route('/index')
 @login_required
-def hello():
+def index():
+    return redirect(url_for('sleep.data'))
+
+@bp.route('/data', methods=('GET', 'POST'))
+@login_required
+def data():
     if request.method == 'POST':
         sleepdata = {};
         for arg in form_input_map.keys():
             sleepdata[arg] = request.form[arg]
         finalsleepdata = merge(sleepdata)
         write_to_table(finalsleepdata)
-    return render_template('hello.html')
+    return render_template('sleep/data.html')
     
 def merge(sleepdata):
     dateddbitem = get_item_from_table(sleepdata['updatedate'])
