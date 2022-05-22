@@ -29,6 +29,13 @@ def write_to_table(sleepdata):
             'AriseTime':{'S':sleepdata['arisetime']},
             'LastUpdateTime':{'S': datetime.datetime.now().isoformat()}
         })
+        
+def get_item_from_table(date):
+    return dynamodb.get_item(
+        TableName='SleepData', 
+        Key={
+            'DayId': {'S':date}
+        })
     
 def generate_ddb_key():
     pst = pendulum.timezone('America/Los_Angeles')
