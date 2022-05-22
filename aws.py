@@ -12,7 +12,6 @@ secretsmanager = boto3.client('secretsmanager')
 def write_to_table(sleepdata):
     key = sleepdata['updatedate']
     if not key:
-        print('Here')
         key = generate_ddb_key()
         
     dynamodb.put_item(
