@@ -1,11 +1,11 @@
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
-
 from auth import login_required
 from aws import (
-    form_input_map, get_item_from_table, write_to_table
+    form_input_map, get_item_from_table, update_table, construct_update_item
 )
+from datetime import datetime
 
 bp = Blueprint('sleep', __name__, url_prefix='/sleep')
 
@@ -21,31 +21,7 @@ def data():
         sleepdata = {};
         for arg in form_input_map.keys():
             sleepdata[arg] = request.form[arg]
-        finalsleepdata = merge(sleepdata)
-        write_to_table(finalsleepdata)
+        print(construct_update_item(sleepdata))
+        update_table(sleepdata)
     return render_template('sleep/data.html')
-    
-def merge(sleepdata):
-    dateddbitem = get_item_from_table(sleepdata['updatedate'])
-    
-    if dateddbitem.get('Item'):
-        finalsleepdata = construct_o_sleepdata(dateddbitem.get('Item'))
-        for arg in form_input_map.keys():
-            if sleepdata.get(arg):
-                finalsleepdata[arg] = sleepdata[arg]
-    else:
-        finalsleepdata = sleepdata
-                
-    return finalsleepdata
-        
-        
-def construct_o_sleepdata(dateddbitem):
-    osleepdata = {}
-    for key, value in form_input_map.items():
-        if dateddbitem.get(value):
-            osleepdata[key] = dateddbitem[value]['S']
-        else:
-            osleepdata[key] = None
-            
-    return osleepdata
     

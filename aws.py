@@ -34,21 +34,19 @@ form_input_map = {
 }
 
 def write_to_table(sleepdata):
-    itemkey = sleepdata['updatedate']
-    if not itemkey:
-        itemkey = generate_ddb_key()
-        
-    item = {}
-    item['DayId'] = { 'S': itemkey }
-    for key, value in form_input_map.items():
-        attr = sleepdata.get(key)
-        item[value] = { 'S': attr if attr else '' }
-            
-    item['LastUpdateTime'] = {'S': datetime.datetime.now().isoformat()}
-        
+    item = construct_ddb_item(sleepdata)
     dynamodb.put_item(
         TableName='SleepData', 
         Item=item
+    )
+
+def update_table(sleepdata):
+    item = construct_update_item(sleepdata)
+    dynamodb.update_item(
+        TableName='SleepData',
+        Key=item['Key'],
+        UpdateExpression=item['UpdateExpression'],
+        ExpressionAttributeValues=item['ExpressionAttributeValues']
     )
         
 def get_item_from_table(date):
@@ -64,6 +62,48 @@ def generate_ddb_key():
     dt_string = dt.strftime("%Y-%m-%d")
     return dt_string
     
+def construct_ddb_item(sleepdata):
+    itemkey = sleepdata['updatedate']
+    if not itemkey:
+        itemkey = generate_ddb_key()
+        
+    ddb_item = {}
+    ddb_item['DayId'] = { 'S': itemkey }
+    for key, value in form_input_map.items():
+        attr = sleepdata.get(key)
+        if attr:
+            ddb_item[value] = { 'S': attr }
+            
+    ddb_item['LastUpdateTime'] = {'S': datetime.datetime.now().isoformat()}
+    
+    return ddb_item
+    
+def construct_update_item(sleepdata):
+    itemkey = sleepdata['updatedate']
+    if not itemkey:
+        itemkey = generate_ddb_key()
+    ddb_item_key = dict()
+    ddb_item_key['DayId'] = { 'S': itemkey }
+    
+    update_expression = 'SET '
+    exp_attr_values = dict()
+    for key, value in form_input_map.items():
+        attr = sleepdata.get(key)
+        if attr:
+            update_expression = update_expression + value + ' = :' + key + ', '
+            exp_attr_values[':' + key] = { 'S' : attr }
+            
+    update_expression = update_expression + 'LastUpdateTime = :lut'
+    exp_attr_values[':lut'] = { 'S': datetime.datetime.now().isoformat() }
+    
+    update_item = dict()
+    update_item['Key'] = ddb_item_key
+    update_item['UpdateExpression'] = update_expression
+    update_item['ExpressionAttributeValues'] = exp_attr_values
+    
+    return update_item
+    
+    
 def get_login_info():
     get_secret_value_response = secretsmanager.get_secret_value(
             SecretId=os.environ.get('LOGIN_MANAGER')
@@ -75,5 +115,3 @@ def get_login_info():
         secret = base64.b64decode(get_secret_value_response['SecretBinary'])
         
     return json.loads(secret)
-            
-    
