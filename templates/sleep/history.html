@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Retrieve sleep data{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+<form method="post">
+  <label for="requireddate">Enter date for data:</label>
+  <input name="requireddate" id="requireddate" type="date"/>
+    
+  <input type="submit" value="Submit">
+</form>
+  
+  {% if sleepdata %}
+  <div class="historyline">
+      <p>When did I put my phone down?  {{ sleepdata['phonedown'] }}</p>
+      <p>What activities did I do during wind-down time?  {{ sleepdata['activities'] }}</p>
+      <p>What time did I go to bed?  {{ sleepdata['bedtime'] }}</p>
+      <p>What time did I turn the lights out to go to sleep? {{ sleepdata['lightsout'] }}</p>
+      <p>About how long did I take to fall asleep? (in minutes)  {{ sleepdata['howlongtillasleep'] }}</p>
+      <p>How many times did I wake up?  {{ sleepdata['howmanywakeup'] }}</p>
+      <p>How long was I awake? (in minutes)  {{ sleepdata['howlongawake'] }}</p>
+      <p>What time did I wake up? {{ sleepdata['wakeuptime'] }}</p>
+      <p>What time did I get out of bed? {{ sleepdata['arisetime'] }}</p>
+      <p>Any notes?  {{ sleepdata['sleepnotes'] }}</p>
+      <p>How long did I sleep according to fitbit?  {{ sleepdata['fitbithrs'] }}:{{ sleepdata['fitbitmins'] }}</p>
+      <p>What was my sleep score according to fitbit?  {{ sleepdata['fitbitscore'] }}</p>
+      <p>How long did I exercise? (in minutes)  {{ sleepdata['exercisetime'] }}</p>
+      <p>What exercises did I do?  {{ sleepdata['exercises'] }}</p>
+      <p>What was my stress level?  {{ sleepdata['stress'] }}</p>
+      <p>What was my mood?  {{ sleepdata['mood'] }}</p>
+      <p>Pre-work-hours energy (7:30 am to 10 am)  {{ sleepdata['energy1'] }}</p>
+      <p>Pre-lunch work-hours energy (10 am to 2 pm)  {{ sleepdata['energy2'] }}</p>
+      <p>Post-lunch work-hours energy (2 pm to 6 pm). {{ sleepdata['energy3'] }}</p>
+      <p>Post-work-hours energy (6 pm to 9 pm)  {{ sleepdata['energy4'] }}</p>
+  </div>
+  {% endif %}
+  
+  <a href="{{ url_for('sleep.index') }}">Go back to index</a>
+
+{% endblock %}

@@ -15,6 +15,7 @@ form_input_map = {
     'activities': 'Activities',
     'bedtime': 'Bedtime',
     'lightsout': 'LightsOutTime',
+    'howlongtillasleep': 'HowLongToSleep',
     'howmanywakeup': 'WakeUpCount',
     'howlongawake': 'WakeUpDuration',
     'wakeuptime': 'FinalWakeUpTime',
@@ -53,7 +54,7 @@ def get_item_from_table(date):
     return dynamodb.get_item(
         TableName='SleepData', 
         Key={
-            'DayId': {'S':date}
+            'DayId': { 'S' : date }
         })
     
 def generate_ddb_key():
@@ -102,6 +103,21 @@ def construct_update_item(sleepdata):
     update_item['ExpressionAttributeValues'] = exp_attr_values
     
     return update_item
+    
+def get_sleepdata(date):
+    result = get_item_from_table(date)
+    if result.get('Item'):
+        dateddbitem = result.get('Item')
+        sleepdata = dict()
+        for key, value in form_input_map.items():
+            if dateddbitem.get(value):
+                sleepdata[key] = dateddbitem[value]['S']
+            else:
+                sleepdata[key] = None
+    else:
+        sleepdata = None
+
+    return sleepdata
     
     
 def get_login_info():

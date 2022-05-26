@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Index{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+    <div class="index">
+        <li><a href="{{ url_for('sleep.data') }}">Enter Sleep Data</a></li>
+        <li><a href="{{ url_for('sleep.history') }}">View Sleep Data History (for a single day)</a></li>
+    </div>
+{% endblock %}
