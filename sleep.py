@@ -53,19 +53,26 @@ def data():
 def history():
     sleepdata = None
     if request.method == 'POST':
-        sleepdata = get_sleepdata(request.form['requireddate'])
-        if sleepdata.get('energy1'):
-            sleepdata['energy1'] = energy_val_map[sleepdata.get('energy1')]
-        if sleepdata.get('energy2'):
-            sleepdata['energy2'] = energy_val_map[sleepdata.get('energy2')]
-        if sleepdata.get('energy3'):
-            sleepdata['energy3'] = energy_val_map[sleepdata.get('energy3')]
-        if sleepdata.get('energy4'):    
-            sleepdata['energy4'] = energy_val_map[sleepdata.get('energy4')]
-        if sleepdata.get('mood'):
-            sleepdata['mood'] = mood_val_map[sleepdata.get('mood')]
-        if sleepdata.get('stress'):
-            sleepdata['stress'] = stress_val_map[sleepdata.get('stress')]
+        error = None
+        if not request.form['requireddate']:
+            flash('Date must be entered')
+        else:
+            sleepdata = get_sleepdata(request.form['requireddate'])
+            if sleepdata:
+                if sleepdata.get('energy1'):
+                    sleepdata['energy1'] = energy_val_map[sleepdata.get('energy1')]
+                if sleepdata.get('energy2'):
+                    sleepdata['energy2'] = energy_val_map[sleepdata.get('energy2')]
+                if sleepdata.get('energy3'):
+                    sleepdata['energy3'] = energy_val_map[sleepdata.get('energy3')]
+                if sleepdata.get('energy4'):    
+                    sleepdata['energy4'] = energy_val_map[sleepdata.get('energy4')]
+                if sleepdata.get('mood'):
+                    sleepdata['mood'] = mood_val_map[sleepdata.get('mood')]
+                if sleepdata.get('stress'):
+                    sleepdata['stress'] = stress_val_map[sleepdata.get('stress')]
+            else:
+                flash('Sleep data for that day does not exist')
         
     return render_template('sleep/history.html', sleepdata=sleepdata)
         
