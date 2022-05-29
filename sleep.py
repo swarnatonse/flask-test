@@ -1,9 +1,10 @@
+import requests
 from flask import (
     Blueprint, flash, g, redirect, render_template, request, url_for
 )
 from auth import login_required
 from aws import (
-    form_input_map, get_sleepdata, update_table, construct_update_item
+    form_input_map, get_sleepdata, update_table, construct_update_item, get_report_url, get_report_lambda_url
 )
 from datetime import datetime
 
@@ -75,5 +76,17 @@ def history():
                 flash('Sleep data for that day does not exist')
         
     return render_template('sleep/history.html', sleepdata=sleepdata)
+    
+@bp.route('/report', methods=('GET', 'POST'))
+@login_required    
+def report():
+    report_url = None
+    if request.method == 'POST':
+        report_lambda_url = get_report_lambda_url()
+        dummyobj = {'randomkey': 'randomvalue'}
+        response = requests.post(report_lambda_url, data=dummyobj)
+        report_url = get_report_url(response.json().get('report_key'))
+    return render_template('sleep/report.html', report_url=report_url)
+    
         
     

@@ -8,6 +8,7 @@ import string
 
 dynamodb = boto3.client('dynamodb')
 secretsmanager = boto3.client('secretsmanager')
+s3 = boto3.client('s3')
 
 form_input_map = {
     'updatedate': 'updatedate',
@@ -131,3 +132,12 @@ def get_login_info():
         secret = base64.b64decode(get_secret_value_response['SecretBinary'])
         
     return json.loads(secret)
+    
+def get_report_url(report_key):
+    return s3.generate_presigned_url(
+         ClientMethod='get_object', 
+         Params={'Bucket': 'sleep-data-swarnatonse', 'Key': 'reports/sleep_report.csv'},
+         ExpiresIn=3600)
+         
+def get_report_lambda_url():
+    return os.environ.get('LAMBDA_URL')
