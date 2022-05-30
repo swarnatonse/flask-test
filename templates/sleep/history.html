@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Retrieve sleep data{% endblock %}</h1>
+  <h1>{% block title %}View sleep data{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -37,6 +37,8 @@
   </div>
   {% endif %}
   
-  <a href="{{ url_for('sleep.index') }}">Go back to index</a>
+  <div class="goback">
+    <a href="{{ url_for('sleep.index') }}">Go back to index</a>
+  </div>
 
 {% endblock %}
