@@ -10,9 +10,9 @@
   <input type="submit" value="Submit">
 </form>
 
-{% if report_url %}
+{% if report_key %}
 
-<a href="{{ report_url }}" download>Download sleep report</a> 
+<a href="{{ url_for('sleep.download', filename=report_key) }}">Download sleep report</a> 
 
 {% endif %}
 

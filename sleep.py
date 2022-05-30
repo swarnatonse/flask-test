@@ -1,10 +1,11 @@
-import requests
+import sendreq
+import json
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
+    Blueprint, flash, g, redirect, render_template, request, url_for, send_file
 )
 from auth import login_required
 from aws import (
-    form_input_map, get_sleepdata, update_table, construct_update_item, get_report_url, get_report_lambda_url
+    form_input_map, get_sleepdata, update_table, construct_update_item, get_report_lambda_url, get_credentials, get_report_file
 )
 from datetime import datetime
 
@@ -80,13 +81,20 @@ def history():
 @bp.route('/report', methods=('GET', 'POST'))
 @login_required    
 def report():
-    report_url = None
+    report_key = None
     if request.method == 'POST':
         report_lambda_url = get_report_lambda_url()
-        dummyobj = {'randomkey': 'randomvalue'}
-        response = requests.post(report_lambda_url, data=dummyobj)
-        report_url = get_report_url(response.json().get('report_key'))
-    return render_template('sleep/report.html', report_url=report_url)
+        credentials = get_credentials()
+        dummyobj = {'startdate': '2022-05-23', 'enddate': '2022-05-27'}
+        response = sendreq.create_request(credentials, report_lambda_url, dummyobj).content
+        report_key = json.loads(response).get('report_key')
+        print(report_key)
+    return render_template('sleep/report.html', report_key=report_key)
+   
+@bp.route('/download/<filename>')    
+def download(filename):
+    file = get_report_file(filename)
+    return send_file(file, mimetype='text/csv')
     
         
     
