@@ -143,8 +143,18 @@ def get_report_lambda_url():
     return os.environ.get('REPORT_LAMBDA_URL')
     
 def get_credentials():
-    credentials = session.get_credentials()
-    access_key = credentials.access_key
-    secret_key = credentials.secret_key
+    get_secret_value_response = secretsmanager.get_secret_value(
+            SecretId=os.environ.get('LOGIN_MANAGER')
+        )
+        
+    if 'SecretString' in get_secret_value_response:
+        secret = get_secret_value_response['SecretString']
+    else:
+        secret = base64.b64decode(get_secret_value_response['SecretBinary'])
+        
+    credentials = dict()
+    secrets_dict = json.loads(secret)
+    credentials['access_key'] = secrets_dict.get('access_key')
+    credentials['secret_key'] = secrets_dict.get('secret_key')
     
     return credentials
