@@ -81,6 +81,7 @@ def history():
 @login_required    
 def report():
     report_key = None
+    data_obj = None
     if request.method == 'POST':
         error = validate_date_input(request)
         if error:
@@ -92,7 +93,7 @@ def report():
             response = sendreq.create_request(credentials, report_lambda_url, data_obj).content
             report_key = json.loads(response).get('report_key')
             print(report_key)
-    return render_template('sleep/report.html', report_key=report_key)
+    return render_template('sleep/report.html', report_key=report_key, data_obj=data_obj)
    
 @bp.route('/download/<filename>')    
 def download(filename):

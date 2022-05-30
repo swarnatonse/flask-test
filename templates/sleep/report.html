@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Generate sleep report{% endblock %}</h1>
+  <h1>{% block title %}Generate sleep clinic report{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
@@ -16,10 +16,12 @@
 
 {% if report_key %}
 
-<a href="{{ url_for('sleep.download', filename=report_key) }}">Download sleep report</a> 
+<a href="{{ url_for('sleep.download', filename=report_key) }}">Download sleep report for {{ data_obj['startdate'] }} to {{ data_obj['enddate'] }}</a> 
 
 {% endif %}
 
-<a href="{{ url_for('sleep.index') }}">Go back to index</a>
+<div class="goback">
+  <a href="{{ url_for('sleep.index') }}">Go back to index</a>
+</div>
 
 {% endblock %}

@@ -136,7 +136,9 @@
     <input type="submit" value="Submit">
 </form>
 
-<a href="{{ url_for('sleep.index') }}">Go back to index</a>
+<div class="goback">
+  <a href="{{ url_for('sleep.index') }}">Go back to index</a>
+</div>
 
 <script>
   Date.prototype.toDateInputValue = (function() {
