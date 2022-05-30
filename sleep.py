@@ -55,7 +55,6 @@ def data():
 def history():
     sleepdata = None
     if request.method == 'POST':
-        error = None
         if not request.form['requireddate']:
             flash('Date must be entered')
         else:
@@ -83,12 +82,16 @@ def history():
 def report():
     report_key = None
     if request.method == 'POST':
-        report_lambda_url = get_report_lambda_url()
-        credentials = get_credentials()
-        dummyobj = {'startdate': '2022-05-23', 'enddate': '2022-05-27'}
-        response = sendreq.create_request(credentials, report_lambda_url, dummyobj).content
-        report_key = json.loads(response).get('report_key')
-        print(report_key)
+        error = validate_date_input(request)
+        if error:
+            flash(error)
+        else:
+            report_lambda_url = get_report_lambda_url()
+            credentials = get_credentials()
+            data_obj = { 'startdate': request.form['startdate'], 'enddate': request.form['enddate'] }
+            response = sendreq.create_request(credentials, report_lambda_url, data_obj).content
+            report_key = json.loads(response).get('report_key')
+            print(report_key)
     return render_template('sleep/report.html', report_key=report_key)
    
 @bp.route('/download/<filename>')    
@@ -97,6 +100,15 @@ def download(filename):
     return Response(file, 
                     mimetype="text/csv",
                     headers={"Content-Disposition":"attachment;filename="+filename})
-    
+                    
+def validate_date_input(request):
+    if not request.form['startdate']:
+        return 'Start date not entered'
+    if not request.form['enddate']:
+        return 'End date not entered'
+    if request.form['startdate'] > request.form['enddate']:
+        return 'Invalid time range'
+    return None
+        
         
     

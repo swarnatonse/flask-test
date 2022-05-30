@@ -1,12 +1,16 @@
 {% extends 'base.html' %}
 
 {% block header %}
-  <h1>{% block title %}Download sleep report{% endblock %}</h1>
+  <h1>{% block title %}Generate sleep report{% endblock %}</h1>
 {% endblock %}
 
 {% block content %}
 
 <form method="post">
+  <label for="startdate">Enter start date for report:</label>
+  <input name="startdate" id="startdate" type="date"/>
+  <label for="enddate">Enter end date for report:</label>
+  <input name="enddate" id="enddate" type="date"/>
   <input type="submit" value="Submit">
 </form>
 
@@ -15,5 +19,7 @@
 <a href="{{ url_for('sleep.download', filename=report_key) }}">Download sleep report</a> 
 
 {% endif %}
+
+<a href="{{ url_for('sleep.index') }}">Go back to index</a>
 
 {% endblock %}
