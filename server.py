@@ -38,4 +38,5 @@ def create_app(test_config=None):
 if __name__ == '__main__':
     PORT = os.environ.get('PORT', 8080)
     app=create_app()
+    # app.run(debug=True, host='0.0.0.0', port=PORT)
     serve(app, host='0.0.0.0', port=PORT)
