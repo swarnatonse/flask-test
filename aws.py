@@ -136,8 +136,8 @@ def get_login_info():
          
 def get_report_file(report_key):
     bucket_name = os.environ.get('S3_BUCKET')
-    s3.download_file(bucket_name, 'reports/' + report_key, report_key)
-    return report_key
+    s3_response_object = s3.get_object(Bucket=bucket_name, Key='reports/' + report_key)
+    return s3_response_object['Body'].read()
          
 def get_report_lambda_url():
     return os.environ.get('REPORT_LAMBDA_URL')

@@ -1,7 +1,7 @@
 import sendreq
 import json
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for, send_file
+    Blueprint, flash, g, redirect, render_template, request, url_for, send_file, Response
 )
 from auth import login_required
 from aws import (
@@ -94,7 +94,9 @@ def report():
 @bp.route('/download/<filename>')    
 def download(filename):
     file = get_report_file(filename)
-    return send_file(file, mimetype='text/csv')
+    return Response(file, 
+                    mimetype="text/csv",
+                    headers={"Content-Disposition":"attachment;filename="+filename})
     
         
     
